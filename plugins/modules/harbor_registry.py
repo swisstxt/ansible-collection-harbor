@@ -67,10 +67,7 @@ class HarborRegistryModule(HarborBaseModule):
             auth=self.auth
         )
 
-        try:
-            existing_registry = existing_registry_request.json()[0]
-        except TypeError:
-            existing_registry = False
+        existing_registry = existing_registry_request.json()
 
         desired_registry = {
             'name': self.module.params['name'],
