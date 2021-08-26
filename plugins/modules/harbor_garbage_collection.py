@@ -29,10 +29,14 @@ from ansible_collections.swisstxt.harbor.plugins.module_utils.base import \
 
 class HarborGarbageCollectionModule(HarborBaseModule):
     def getGarbageCollection(self):
-        gc = requests.get(
+        gc_request = requests.get(
             f"{self.api_url}/system/gc/schedule",
             auth=self.auth
-        ).json()
+        )
+        if(gc_request.status_code == 200 and gc_request.headers["content-length"] == "0"):
+            return {}
+
+        gc = gc_request.json()
 
         job_parameters = json.loads(gc['job_parameters'])
 
