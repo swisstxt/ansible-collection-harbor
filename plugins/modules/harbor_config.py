@@ -68,7 +68,7 @@ class HarborConfigModule(HarborBaseModule):
                         self.module.fail_json(msg=f"Configuration option {configuration} unavailable.", **result)
 
                     # Remove not changed configurations
-                    if desired_configuration[configuration] == before[configuration]['value']:
+                    if desired_configuration[configuration] == before[configuration].get('value', ''):
                         desired_configuration.pop(configuration)
                         continue
 
