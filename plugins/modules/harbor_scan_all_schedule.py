@@ -29,12 +29,15 @@ from ansible_collections.swisstxt.harbor.plugins.module_utils.base import \
 
 class HarborScanAllScheduleModule(HarborBaseModule):
     def getSchedule(self):
-        schedule = requests.get(
+        schedule_request = requests.get(
             f"{self.api_url}/system/scanAll/schedule",
             auth=self.auth
-        ).json()
+        )
 
-        job_parameters = json.loads(schedule['job_parameters'])
+        if(schedule_request.status_code == 200 and schedule_request.headers["content-length"] == "0"):
+            return {}
+
+        schedule = schedule_request.json()
 
         return {
             "schedule": schedule['schedule']
