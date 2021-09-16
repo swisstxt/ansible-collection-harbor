@@ -91,14 +91,18 @@ class HarborRegistryModule(HarborBaseModule):
             desired_registry['credential']['type'] = 'basic'
 
         if existing_registry:
+            existing_registry = existing_registry[0]
+
             # Check & "calculate" desired configuration
             self.result['registry'] = copy.deepcopy(existing_registry)
             after_calculated = copy.deepcopy(existing_registry)
             after_calculated.update(desired_registry)
 
             # Ignore secret as it isn't returned with API
-            del(existing_registry['credential']['access_secret'])
-            del(after_calculated['credential']['access_secret'])
+            after_calculated['credential'].pop("access_secret", None)
+            after_calculated.pop("update_time", None)
+            existing_registry['credential'].pop("access_secret", None)
+            existing_registry.pop("update_time", None)
 
             if existing_registry == after_calculated:
                 self.module.exit_json(**self.result)
@@ -125,6 +129,8 @@ class HarborRegistryModule(HarborBaseModule):
                     auth=self.auth
                 )
                 after = after_request.json()
+                after['credential'].pop("access_secret", None)
+                after.pop("update_time", None)
                 self.result['registry'] = copy.deepcopy(after)
                 if existing_registry != after:
                     self.result['changed'] = True
