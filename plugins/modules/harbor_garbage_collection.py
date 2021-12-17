@@ -31,7 +31,8 @@ class HarborGarbageCollectionModule(HarborBaseModule):
     def getGarbageCollection(self):
         gc_request = requests.get(
             f"{self.api_url}/system/gc/schedule",
-            auth=self.auth
+            auth=self.auth,
+            verify=self.api_verify
         )
         if(gc_request.status_code == 200 and gc_request.headers["content-length"] == "0"):
             return {}
@@ -51,7 +52,8 @@ class HarborGarbageCollectionModule(HarborBaseModule):
         put_gc_request = requests.put(
             f"{self.api_url}/system/gc/schedule",
             auth=self.auth,
-            json=payload
+            json=payload,
+            verify=self.api_verify
         )
         if not put_gc_request.status_code == 200:
             self.module.fail_json(msg=self.requestParse(put_gc_request))
