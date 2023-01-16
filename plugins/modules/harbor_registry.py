@@ -44,7 +44,7 @@ class HarborRegistryModule(HarborBaseModule):
             endpoint_url=dict(type='str', required=True),
             access_key=dict(type='str', required=False),
             access_secret=dict(type='str', required=False, no_log=True),
-            insecure=dict(type='bool', required=False, default=False),
+            insecure=dict(type='bool', required=False),
 
             state=dict(default='present', choices=['present'])
         )
@@ -71,11 +71,7 @@ class HarborRegistryModule(HarborBaseModule):
 
         desired_registry = {
             'name': self.module.params['name'],
-            'credential': {
-                'type': '',
-                'access_key': '',
-                'access_secret': ''
-            }
+            'credential': {}
         }
         if self.module.params['insecure'] is not None:
             desired_registry['insecure'] = self.module.params['insecure']
