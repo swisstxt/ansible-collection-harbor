@@ -38,7 +38,7 @@ class HarborScanAllScheduleModule(HarborBaseModule):
             return {}
 
         schedule = schedule_request.json()
-
+        del schedule["schedule"]["next_scheduled_time"]
         return {
             "schedule": schedule['schedule']
         }

@@ -23,7 +23,7 @@ options:
     type: dict
     default: {}
 extends_documentation_fragment:
-  - joschi36.harbor.api
+  - swisstxt.harbor.api
 '''
 
 class HarborConfigModule(HarborBaseModule):

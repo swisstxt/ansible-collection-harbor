@@ -16,7 +16,7 @@ description:
 options:
   #TODO
 extends_documentation_fragment:
-  - joschi36.harbor.api
+  - swisstxt.harbor.api
 '''
 
 import copy
