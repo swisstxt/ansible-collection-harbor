@@ -15,7 +15,7 @@ description:
   - Update Harbor garbage collection options over API.
 
 extends_documentation_fragment:
-  - joschi36.harbor.api
+  - swisstxt.harbor.api
 '''
 
 import copy
@@ -37,7 +37,7 @@ class HarborGarbageCollectionModule(HarborBaseModule):
             return {}
 
         gc = gc_request.json()
-
+        del gc["schedule"]["next_scheduled_time"]
         job_parameters = json.loads(gc['job_parameters'])
 
         return {
