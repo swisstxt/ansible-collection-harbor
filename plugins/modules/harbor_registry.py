@@ -64,7 +64,8 @@ class HarborRegistryModule(HarborBaseModule):
 
         existing_registry_request = requests.get(
             f"{self.api_url}/registries?q=name%3D{self.module.params['name']}",
-            auth=self.auth
+            auth=self.auth,
+            verify=self.api_verify
         )
 
         existing_registry = existing_registry_request.json()
@@ -115,6 +116,7 @@ class HarborRegistryModule(HarborBaseModule):
                     f'{self.api_url}/registries/{existing_registry["id"]}',
                     auth=self.auth,
                     json=desired_registry,
+                    verify=self.api_verify
                 )
 
                 if not set_request.status_code == 200:
@@ -122,7 +124,8 @@ class HarborRegistryModule(HarborBaseModule):
 
                 after_request =requests.get(
                     f'{self.api_url}/registries/{existing_registry["id"]}',
-                    auth=self.auth
+                    auth=self.auth,
+                    verify=self.api_verify
                 )
                 after = after_request.json()
                 after['credential'].pop("access_secret", None)
@@ -140,14 +143,16 @@ class HarborRegistryModule(HarborBaseModule):
                 create_project_request = requests.post(
                     self.api_url+'/registries',
                     auth=self.auth,
-                    json=desired_registry
+                    json=desired_registry,
+                    verify=self.api_verify
                 )
                 if not create_project_request.status_code == 201:
                     self.module.fail_json(msg=self.requestParse(create_project_request))
 
                 after_request =requests.get(
                     f"{self.api_url}/registries?q=name%3D{self.module.params['name']}",
-                    auth=self.auth
+                    auth=self.auth,
+                    verify=self.api_verify
                 )
                 self.result['registry'] = copy.deepcopy(after_request.json())
 

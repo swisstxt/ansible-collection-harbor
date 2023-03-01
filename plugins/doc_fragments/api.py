@@ -15,4 +15,10 @@ class ModuleDocFragment(object):
     - Password of user with admin privileges
     required: true
     type: str
+  api_verify:
+    description:
+    - Verify SSL Certificate for API Call
+    default: true
+    required: false
+    type: bool
 '''

@@ -8,17 +8,20 @@ class HarborBaseModule(object):
     COMMON_ARG_SPEC = dict(
         api_url=dict(type='str', required=True),
         api_username=dict(type='str', required=True),
-        api_password=dict(type='str', required=True, no_log=True)
+        api_password=dict(type='str', required=True, no_log=True),
+        api_verify=dict(type='bool', required=False, default=True)
     )
 
     def __init__(self):
         self.api_url = self.module.params['api_url']
         self.auth=(self.module.params['api_username'],self.module.params['api_password'])
+        self.api_verify=self.module.params['api_verify']
 
     def getProjectByName(self, name):
         r = requests.get(
             f"{self.api_url}/projects?name={name}",
-            auth=self.auth
+            auth=self.auth,
+            verify=self.api_verify
         )
 
         try:

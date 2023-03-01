@@ -72,7 +72,8 @@ class HarborProjectModule(HarborBaseModule):
             if self.module.params['quota_gb'] is not None:
                 quota_request = requests.get(
                     f"{self.api_url}/quotas?reference_id={existing_project['project_id']}",
-                    auth=self.auth
+                    auth=self.auth,
+                    verify=self.api_verify
                 )
                 quota = quota_request.json()[0]
                 actual_quota_size = quota['hard']['storage']
@@ -85,7 +86,8 @@ class HarborProjectModule(HarborBaseModule):
                             'hard': {
                                 'storage': desired_quota_size
                             }
-                        }
+                        },
+                        verify=self.api_verify
                     )
                     if quota_put_request.status_code == 200:
                         self.result['changed'] = True
@@ -126,6 +128,7 @@ class HarborProjectModule(HarborBaseModule):
                     json={
                         "metadata": project_desired_metadata
                     },
+                    verify=self.api_verify
                 )
 
                 if not set_request.status_code == 200:
@@ -133,7 +136,8 @@ class HarborProjectModule(HarborBaseModule):
 
                 after_request =requests.get(
                     f'{self.api_url}/projects/{existing_project["project_id"]}',
-                    auth=self.auth
+                    auth=self.auth,
+                    verify=self.api_verify
                 )
                 after = after_request.json()
                 self.result['project'] = copy.deepcopy(after)
@@ -156,7 +160,8 @@ class HarborProjectModule(HarborBaseModule):
                 if self.module.params['cache_registry'] is not None:
                     registry_request = requests.get(
                         f"{self.api_url}/registries?q=name%3D{self.module.params['cache_registry']}",
-                        auth=self.auth
+                        auth=self.auth,
+                        verify=self.api_verify
                     )
 
                     try:
@@ -167,7 +172,8 @@ class HarborProjectModule(HarborBaseModule):
                 create_project_request = requests.post(
                     self.api_url+'/projects',
                     auth=self.auth,
-                    json=data
+                    json=data,
+                    verify=self.api_verify
                 )
 
                 if not create_project_request.status_code == 201:
@@ -175,7 +181,8 @@ class HarborProjectModule(HarborBaseModule):
 
                 after_request = requests.get(
                     f"{self.api_url}/projects?page=1&page_size=1&name={self.module.params['name'] }",
-                    auth=self.auth
+                    auth=self.auth,
+                    verify=self.api_verify
                 )
                 self.result['project'] = copy.deepcopy(after_request.json())
             self.result['changed'] = True

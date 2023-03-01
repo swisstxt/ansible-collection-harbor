@@ -74,7 +74,8 @@ class HarborProjectMemberModule(HarborBaseModule):
     def listProjectMembers(self, project_id):
         member_list_request = requests.get(
             f"{self.api_url}/projects/{project_id}/members",
-            auth=self.auth
+            auth=self.auth,
+            verify=self.api_verify
         )
         member_list = member_list_request.json()
         self.result['member_list'] = member_list
@@ -163,7 +164,8 @@ class HarborProjectMemberModule(HarborBaseModule):
                         f"{self.api_url}/projects/{project_id}/members/{member['id']}",
                         json={
                             "role_id": self.role_id
-                        }
+                        },
+                        verify=self.api_verify
                     )
                     if not put_project_member_request.status_code == 200:
                         self.module.fail_json(msg=self.requestParse(put_project_member_request))
@@ -182,6 +184,7 @@ class HarborProjectMemberModule(HarborBaseModule):
             if not self.module.check_mode:
                 delete_project_member_request = requests.delete(
                     f"{self.api_url}/projects/{project_id}/members/{member['id']}",
+                    verify=self.api_verify
                 )
                 if not delete_project_member_request.status_code == 200:
                     self.module.fail_json(msg=self.requestParse(delete_project_member_request))
@@ -211,7 +214,8 @@ class HarborProjectMemberModule(HarborBaseModule):
                 create_project_member_request = requests.post(
                     f"{self.api_url}/projects/{project_id}/members",
                     auth=self.auth,
-                    json=create_payload
+                    json=create_payload,
+                    verify=self.api_verify
                 )
 
                 if not create_project_member_request.status_code == 201:

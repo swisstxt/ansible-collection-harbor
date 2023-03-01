@@ -31,7 +31,8 @@ class HarborScanAllScheduleModule(HarborBaseModule):
     def getSchedule(self):
         schedule_request = requests.get(
             f"{self.api_url}/system/scanAll/schedule",
-            auth=self.auth
+            auth=self.auth,
+            verify=self.api_verify
         )
 
         if(schedule_request.status_code == 200 and schedule_request.headers["content-length"] == "0"):
@@ -47,7 +48,8 @@ class HarborScanAllScheduleModule(HarborBaseModule):
         put_schedule_request = requests.put(
             f"{self.api_url}/system/scanAll/schedule",
             auth=self.auth,
-            json=payload
+            json=payload,
+            verify=self.api_verify
         )
         if not put_schedule_request.status_code == 200:
             self.module.fail_json(msg=self.requestParse(put_schedule_request))
